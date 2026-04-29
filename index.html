@@ -5,142 +5,400 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>МигРемонт — Калькулятор материалов</title>
-<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Oswald:wght@500;600;700&display=swap" rel="stylesheet">
 <style>
   :root {
-    --bg: #0f0f0f;
-    --surface: #1a1a1a;
-    --border: #2a2a2a;
-    --accent: #e8c547;
-    --accent2: #4fc3f7;
-    --text: #e0e0e0;
-    --muted: #888;
-    --green: #66bb6a;
+    --brand-dark: #1d2c4a;
+    --brand-darker: #131e36;
+    --brand-light: #2a3f6b;
+    --silver: #b8bdc7;
+    --silver-dark: #6b7280;
+    --accent: #c9a961;
+    --accent-bright: #e8c547;
+    --bg: #0a1124;
+    --bg-card: #14213d;
+    --bg-input: #0d1830;
+    --border: #2a3f6b;
+    --border-light: #3d5285;
+    --text: #e8ecf3;
+    --text-muted: #8a93a8;
+    --green: #4ade80;
+    --shadow: 0 10px 40px rgba(0,0,0,0.4);
   }
   * { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
   body {
     background: var(--bg);
+    background-image:
+      radial-gradient(at 20% 0%, rgba(29,44,74,0.6) 0%, transparent 50%),
+      radial-gradient(at 80% 100%, rgba(201,169,97,0.08) 0%, transparent 50%),
+      linear-gradient(180deg, #0a1124 0%, #060a18 100%);
+    background-attachment: fixed;
     color: var(--text);
-    font-family: 'IBM Plex Mono', monospace;
+    font-family: 'Inter', -apple-system, sans-serif;
     min-height: 100vh;
-    padding: 16px;
+    padding: 0 14px 30px;
+    line-height: 1.5;
   }
-  .brand {
-    background: #fff;
-    padding: 18px;
-    margin-bottom: 20px;
-    text-align: center;
-    border: 1px solid #ccc;
+  .hero { text-align: center; padding: 30px 0 20px; }
+  .brand-logo {
+    background: linear-gradient(135deg, #ffffff 0%, #f0f2f7 100%);
+    padding: 24px;
+    margin: 0 auto 24px;
+    max-width: 520px;
+    border-radius: 4px;
+    border: 1px solid rgba(201,169,97,0.3);
+    box-shadow: 0 8px 30px rgba(0,0,0,0.3), inset 0 1px 0 rgba(255,255,255,0.5);
+    position: relative;
+    overflow: hidden;
   }
-  .brand img { max-width: 100%; max-height: 100px; }
-  .brand-text {
-    font-family: 'Bebas Neue', sans-serif;
-    color: #1d2c4a;
-    font-size: 2rem;
-    letter-spacing: 3px;
+  .brand-logo::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, var(--accent), transparent);
   }
-  .brand-sub {
-    color: #555;
-    font-size: 0.65rem;
-    letter-spacing: 2px;
-    text-transform: uppercase;
-    margin-top: 4px;
+  .brand-logo img {
+    max-width: 100%; max-height: 110px;
+    object-fit: contain; display: block; margin: 0 auto;
   }
-  .header { text-align: center; padding: 16px 0 20px; border-bottom: 1px solid var(--border); margin-bottom: 20px; }
-  .header h1 {
-    font-family: 'Bebas Neue', sans-serif;
-    font-size: clamp(1.8rem, 6vw, 3rem);
-    letter-spacing: 4px;
-    color: var(--accent);
-    line-height: 1;
+  .brand-fallback { text-align: center; }
+  .brand-fallback-name {
+    font-family: 'Oswald', sans-serif; font-weight: 700;
+    color: var(--brand-dark); font-size: 2.4rem;
+    letter-spacing: 2px; line-height: 1;
   }
-  .header p { color: var(--muted); font-size: 0.7rem; letter-spacing: 3px; text-transform: uppercase; margin-top: 6px; }
-  .tabs { display: flex; gap: 4px; margin-bottom: 20px; overflow-x: auto; padding-bottom: 4px; -webkit-overflow-scrolling: touch; }
+  .brand-fallback-name span { color: var(--silver-dark); }
+  .brand-fallback-sub {
+    color: var(--silver-dark); font-size: 0.7rem;
+    letter-spacing: 3px; text-transform: uppercase;
+    margin-top: 8px; font-weight: 500;
+  }
+  .hero-title {
+    font-family: 'Oswald', sans-serif; font-weight: 600;
+    font-size: clamp(1.8rem, 6vw, 2.8rem);
+    letter-spacing: 4px; color: var(--text);
+    line-height: 1.1; margin-bottom: 8px; text-transform: uppercase;
+  }
+  .hero-title span {
+    background: linear-gradient(135deg, var(--accent) 0%, var(--accent-bright) 100%);
+    -webkit-background-clip: text; background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+  .hero-sub {
+    color: var(--silver); font-size: 0.78rem;
+    letter-spacing: 3px; text-transform: uppercase; font-weight: 400;
+  }
+  .hero-divider {
+    width: 60px; height: 2px;
+    background: linear-gradient(90deg, transparent, var(--accent), transparent);
+    margin: 18px auto 0;
+  }
+  .tabs-wrap {
+    position: sticky; top: 0; z-index: 50;
+    background: linear-gradient(180deg, var(--bg) 0%, rgba(10,17,36,0.95) 90%, transparent 100%);
+    padding: 14px 0; margin: 0 -14px 24px;
+    backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
+  }
+  .tabs {
+    display: flex; gap: 6px; overflow-x: auto;
+    padding: 0 14px 6px; -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+  }
+  .tabs::-webkit-scrollbar { display: none; }
   .tab {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    color: var(--muted);
-    padding: 10px 16px;
-    font-family: 'IBM Plex Mono', monospace;
-    font-size: 0.7rem;
-    letter-spacing: 1px;
-    cursor: pointer;
-    white-space: nowrap;
-    text-transform: uppercase;
+    background: var(--bg-card); border: 1px solid var(--border);
+    color: var(--silver); padding: 11px 16px;
+    font-family: 'Inter', sans-serif; font-size: 0.72rem;
+    font-weight: 500; letter-spacing: 1px; cursor: pointer;
+    white-space: nowrap; text-transform: uppercase;
+    border-radius: 3px; transition: all 0.25s ease;
+    display: flex; align-items: center; gap: 6px;
   }
-  .tab.active { background: var(--accent); color: #000; border-color: var(--accent); font-weight: 600; }
-  .section { display: none; }
+  .tab:hover { border-color: var(--accent); color: var(--accent); transform: translateY(-1px); }
+  .tab.active {
+    background: linear-gradient(135deg, var(--accent) 0%, #d4b876 100%);
+    color: var(--brand-darker); border-color: var(--accent);
+    font-weight: 700; box-shadow: 0 4px 14px rgba(201,169,97,0.35);
+  }
+  .tab-icon { font-size: 1rem; line-height: 1; }
+  .section { display: none; animation: fadeIn 0.4s ease; }
   .section.active { display: block; }
-  .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
-  @media(max-width: 760px) { .grid { grid-template-columns: 1fr; } }
-  .card { background: var(--surface); border: 1px solid var(--border); padding: 18px; }
-  .card-label { font-size: 0.65rem; letter-spacing: 2px; text-transform: uppercase; color: var(--accent2); margin-bottom: 14px; }
-  .field { margin-bottom: 14px; }
-  .field label { display: block; font-size: 0.66rem; color: var(--muted); letter-spacing: 1px; margin-bottom: 5px; text-transform: uppercase; }
-  .field input, .field select {
-    width: 100%; background: #111; border: 1px solid var(--border); color: var(--text);
-    font-family: 'IBM Plex Mono', monospace; font-size: 0.9rem; padding: 9px 12px; outline: none;
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
   }
-  .field input:focus, .field select:focus { border-color: var(--accent); }
-  .field select option { background: #111; }
+  .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; }
+  @media(max-width: 760px) { .grid { grid-template-columns: 1fr; } }
+  .card {
+    background: linear-gradient(135deg, var(--bg-card) 0%, rgba(20,33,61,0.7) 100%);
+    border: 1px solid var(--border); padding: 22px 20px;
+    border-radius: 4px; position: relative; box-shadow: var(--shadow);
+  }
+  .card::before {
+    content: ''; position: absolute; top: 0; left: 0;
+    width: 3px; height: 60px;
+    background: linear-gradient(180deg, var(--accent), transparent);
+  }
+  .card-label {
+    font-family: 'Oswald', sans-serif; font-size: 0.7rem;
+    letter-spacing: 3px; text-transform: uppercase;
+    color: var(--accent); margin-bottom: 18px;
+    padding-bottom: 12px; border-bottom: 1px solid var(--border);
+    display: flex; align-items: center; gap: 10px; font-weight: 600;
+  }
+  .card-label::before {
+    content: ''; width: 4px; height: 14px;
+    background: var(--accent); display: inline-block;
+  }
+  .field { margin-bottom: 14px; }
+  .field label {
+    display: block; font-size: 0.66rem; color: var(--silver);
+    letter-spacing: 1.5px; margin-bottom: 6px;
+    text-transform: uppercase; font-weight: 500;
+  }
+  .field input, .field select {
+    width: 100%; background: var(--bg-input);
+    border: 1px solid var(--border); color: var(--text);
+    font-family: 'Inter', sans-serif; font-size: 0.95rem;
+    font-weight: 500; padding: 11px 14px; outline: none;
+    border-radius: 3px; transition: all 0.2s;
+  }
+  .field input:focus, .field select:focus {
+    border-color: var(--accent); background: var(--brand-darker);
+    box-shadow: 0 0 0 3px rgba(201,169,97,0.1);
+  }
+  .field select option { background: var(--brand-darker); color: var(--text); }
   .row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
   .btn {
-    width: 100%; background: var(--accent); color: #000; border: none;
-    font-family: 'Bebas Neue', sans-serif; font-size: 1.3rem; letter-spacing: 3px;
-    padding: 14px; cursor: pointer; margin-top: 16px;
+    width: 100%;
+    background: linear-gradient(135deg, var(--accent) 0%, #d4b876 100%);
+    color: var(--brand-darker); border: none;
+    font-family: 'Oswald', sans-serif; font-size: 1.1rem;
+    font-weight: 600; letter-spacing: 3px; padding: 15px;
+    cursor: pointer; margin-top: 18px; border-radius: 3px;
+    text-transform: uppercase; transition: all 0.2s;
+    box-shadow: 0 4px 14px rgba(201,169,97,0.3);
   }
-  .results { background: #111; border: 1px solid var(--border); padding: 16px; margin-top: 16px; }
-  .results-title { font-family: 'Bebas Neue', sans-serif; font-size: 1.4rem; letter-spacing: 3px; color: var(--accent); margin-bottom: 14px; padding-bottom: 10px; border-bottom: 1px solid var(--border); }
-  .result-item { display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid #1e1e1e; font-size: 0.82rem; gap: 10px; }
+  .btn:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(201,169,97,0.45); }
+  .btn:active { transform: translateY(0); }
+  .results {
+    background: linear-gradient(180deg, var(--brand-darker) 0%, var(--bg) 100%);
+    border: 1px solid var(--border-light); padding: 20px;
+    margin-top: 18px; border-radius: 3px;
+  }
+  .results-title {
+    font-family: 'Oswald', sans-serif; font-size: 1rem;
+    letter-spacing: 3px; color: var(--accent);
+    margin-bottom: 16px; padding-bottom: 12px;
+    border-bottom: 1px solid var(--border);
+    text-transform: uppercase; font-weight: 600;
+    display: flex; align-items: center; gap: 10px;
+  }
+  .results-title::before { content: '◆'; color: var(--accent); font-size: 0.7rem; }
+  .result-item {
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 9px 0; border-bottom: 1px dashed rgba(61,82,133,0.4);
+    font-size: 0.85rem; gap: 10px;
+  }
   .result-item:last-child { border-bottom: none; }
-  .result-name { color: var(--muted); flex: 1; }
-  .result-value { font-weight: 600; color: var(--green); text-align: right; white-space: nowrap; }
-  .result-value span { font-size: 0.65rem; color: var(--muted); margin-left: 4px; }
-  .result-group { margin-bottom: 14px; padding-bottom: 14px; border-bottom: 1px solid var(--border); }
+  .result-name { color: var(--silver); flex: 1; font-weight: 400; }
+  .result-value {
+    font-weight: 700; color: var(--accent-bright);
+    text-align: right; white-space: nowrap;
+    font-family: 'Oswald', sans-serif; font-size: 1rem; letter-spacing: 0.5px;
+  }
+  .result-value span {
+    font-size: 0.7rem; color: var(--silver-dark);
+    margin-left: 4px; font-weight: 400; font-family: 'Inter', sans-serif;
+  }
+  .result-group {
+    margin-bottom: 18px; padding-bottom: 16px;
+    border-bottom: 1px solid var(--border);
+  }
   .result-group:last-child { border-bottom: none; padding-bottom: 0; margin-bottom: 0; }
-  .result-group-title { font-size: 0.65rem; letter-spacing: 2px; text-transform: uppercase; color: var(--accent2); margin-bottom: 8px; }
-  .hint { font-size: 0.62rem; color: var(--muted); margin-top: 5px; line-height: 1.5; }
-  .tag { display: inline-block; font-size: 0.58rem; padding: 2px 6px; letter-spacing: 1px; margin-left: 6px; }
-  .tag.plus { background: rgba(102,187,106,0.15); color: var(--green); }
-  .section-desc { font-size: 0.7rem; color: var(--muted); margin-bottom: 18px; line-height: 1.6; padding: 12px; border-left: 2px solid var(--accent); background: rgba(232,197,71,0.04); }
+  .result-group-title {
+    font-size: 0.65rem; letter-spacing: 2.5px;
+    text-transform: uppercase; color: var(--silver);
+    margin-bottom: 10px; font-weight: 600;
+    display: flex; align-items: center; gap: 6px;
+  }
+  .result-group-title::before {
+    content: ''; width: 16px; height: 1px; background: var(--accent);
+  }
+  .hint {
+    font-size: 0.62rem; color: var(--silver-dark);
+    margin-top: 5px; line-height: 1.5; font-style: italic;
+  }
+  .tag {
+    display: inline-block; font-size: 0.58rem;
+    padding: 2px 7px; letter-spacing: 1px;
+    margin-left: 6px; border-radius: 2px; font-weight: 600;
+  }
+  .tag.plus {
+    background: rgba(74,222,128,0.15); color: var(--green);
+    border: 1px solid rgba(74,222,128,0.3);
+  }
+  .section-desc {
+    font-size: 0.78rem; color: var(--silver);
+    margin-bottom: 20px; line-height: 1.6;
+    padding: 14px 16px; border-left: 3px solid var(--accent);
+    background: linear-gradient(90deg, rgba(201,169,97,0.08) 0%, transparent 100%);
+    border-radius: 0 3px 3px 0;
+  }
   .divider { border: none; border-top: 1px solid var(--border); margin: 16px 0; }
-  .checkbox-row { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; }
-  .checkbox-row input[type="checkbox"] { width: 16px; height: 16px; accent-color: var(--accent); }
-  .checkbox-row label { font-size: 0.7rem; color: var(--muted); letter-spacing: 1px; text-transform: uppercase; }
-  .footer-brand { text-align: center; margin-top: 30px; padding: 20px 10px; border-top: 1px solid var(--border); color: var(--muted); font-size: 0.65rem; letter-spacing: 2px; text-transform: uppercase; }
-  .footer-brand span { color: var(--accent); }
+  .checkbox-row {
+    display: flex; align-items: center; gap: 10px;
+    margin-bottom: 12px; padding: 8px 10px;
+    background: rgba(13,24,48,0.5); border-radius: 3px;
+    transition: background 0.2s;
+  }
+  .checkbox-row:hover { background: rgba(29,44,74,0.6); }
+  .checkbox-row input[type="checkbox"] {
+    width: 18px; height: 18px; accent-color: var(--accent); cursor: pointer;
+  }
+  .checkbox-row label {
+    font-size: 0.72rem; color: var(--silver);
+    letter-spacing: 1px; text-transform: uppercase;
+    cursor: pointer; font-weight: 500;
+  }
+  .cta-block {
+    margin-top: 22px; padding: 26px 22px;
+    background: linear-gradient(135deg, var(--brand-dark) 0%, var(--brand-light) 100%);
+    border: 1px solid var(--accent); text-align: center;
+    position: relative; overflow: hidden;
+    border-radius: 4px; box-shadow: 0 10px 30px rgba(29,44,74,0.5);
+  }
+  .cta-block::before {
+    content: ''; position: absolute; top: 0; left: 0; right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, transparent, var(--accent), transparent);
+  }
+  .cta-block::after {
+    content: ''; position: absolute; top: -50%; right: -20%;
+    width: 200px; height: 200px;
+    background: radial-gradient(circle, rgba(201,169,97,0.15) 0%, transparent 70%);
+    pointer-events: none;
+  }
+  .cta-badge {
+    display: inline-block; background: rgba(201,169,97,0.15);
+    color: var(--accent-bright); font-size: 0.6rem;
+    letter-spacing: 2px; padding: 4px 10px; margin-bottom: 12px;
+    text-transform: uppercase; font-weight: 600;
+    border: 1px solid rgba(201,169,97,0.3); border-radius: 2px;
+    position: relative;
+  }
+  .cta-title {
+    font-family: 'Oswald', sans-serif; font-size: 1.5rem;
+    font-weight: 600; letter-spacing: 2px; color: #fff;
+    line-height: 1.2; margin-bottom: 10px;
+    text-transform: uppercase; position: relative;
+  }
+  .cta-subtitle {
+    color: rgba(255,255,255,0.8); font-size: 0.78rem;
+    letter-spacing: 0.5px; margin-bottom: 18px;
+    line-height: 1.6; position: relative;
+  }
+  .cta-features {
+    display: flex; flex-wrap: wrap; justify-content: center;
+    gap: 8px; margin-bottom: 18px; position: relative;
+  }
+  .cta-feature {
+    display: flex; align-items: center; gap: 5px;
+    font-size: 0.65rem; color: var(--silver);
+    background: rgba(13,24,48,0.5); padding: 5px 10px;
+    border-radius: 2px; letter-spacing: 0.5px;
+    text-transform: uppercase; border: 1px solid rgba(184,189,199,0.15);
+  }
+  .cta-feature::before { content: '✓'; color: var(--accent); font-weight: bold; }
+  .cta-btn {
+    display: inline-block;
+    background: linear-gradient(135deg, var(--accent) 0%, var(--accent-bright) 100%);
+    color: var(--brand-darker); text-decoration: none;
+    padding: 16px 36px; font-family: 'Oswald', sans-serif;
+    font-size: 1.05rem; font-weight: 700; letter-spacing: 3px;
+    border: none; cursor: pointer; transition: all 0.2s;
+    box-shadow: 0 6px 20px rgba(201,169,97,0.4);
+    border-radius: 3px; text-transform: uppercase; position: relative;
+  }
+  .cta-btn:hover { transform: translateY(-2px); box-shadow: 0 8px 26px rgba(201,169,97,0.55); }
+  .cta-btn:active { transform: translateY(0); }
+  .cta-link {
+    display: block; margin-top: 14px;
+    color: rgba(255,255,255,0.7); font-size: 0.7rem;
+    letter-spacing: 2px; text-decoration: none;
+    text-transform: uppercase; font-weight: 500;
+    transition: color 0.2s; position: relative;
+  }
+  .cta-link:hover { color: var(--accent-bright); }
+  .footer {
+    margin-top: 40px; padding: 28px 16px;
+    background: linear-gradient(135deg, var(--brand-darker) 0%, var(--bg) 100%);
+    border: 1px solid var(--border); border-radius: 4px;
+    text-align: center; position: relative; overflow: hidden;
+  }
+  .footer::before {
+    content: ''; position: absolute; top: 0; left: 0; right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, var(--accent), transparent);
+  }
+  .footer-brand {
+    font-family: 'Oswald', sans-serif; color: var(--accent);
+    font-size: 1.4rem; letter-spacing: 4px; margin-bottom: 6px;
+    font-weight: 700; text-transform: uppercase;
+  }
+  .footer-tagline {
+    color: var(--silver); font-size: 0.7rem;
+    letter-spacing: 3px; text-transform: uppercase; margin-bottom: 16px;
+  }
+  .footer-link {
+    display: inline-block; color: var(--accent); text-decoration: none;
+    font-size: 0.78rem; letter-spacing: 2px;
+    padding: 8px 18px; border: 1px solid var(--accent);
+    border-radius: 2px; text-transform: uppercase;
+    transition: all 0.2s; font-weight: 500;
+  }
+  .footer-link:hover { background: var(--accent); color: var(--brand-darker); }
+  .footer-copy {
+    margin-top: 18px; font-size: 0.62rem;
+    color: var(--silver-dark); letter-spacing: 1.5px; text-transform: uppercase;
+  }
 </style>
 </head>
 <body>
 
-<div class="brand">
-  <img src="logo.png" alt="МигРемонт" onerror="this.style.display='none';document.getElementById('brand-fallback').style.display='block'">
-  <div id="brand-fallback" style="display:none">
-    <div class="brand-text">МигРемонт</div>
-    <div class="brand-sub">Ремонт коммерческих помещений</div>
+<div class="hero">
+  <div class="brand-logo">
+    <img src="logo.png" alt="МигРемонт" onerror="this.style.display='none';document.getElementById('brand-fallback').style.display='block'">
+    <div id="brand-fallback" class="brand-fallback" style="display:none">
+      <div class="brand-fallback-name">Миг<span>Ремонт</span></div>
+      <div class="brand-fallback-sub">Ремонт коммерческих помещений</div>
+    </div>
+  </div>
+  <h1 class="hero-title">Калькулятор <span>материалов</span></h1>
+  <p class="hero-sub">Точный расчёт для отделочных работ</p>
+  <div class="hero-divider"></div>
+</div>
+
+<div class="tabs-wrap">
+  <div class="tabs">
+    <button class="tab active" data-tab="obsh"><span class="tab-icon">▦</span> Обшивка ГКЛ</button>
+    <button class="tab" data-tab="peregorodka"><span class="tab-icon">▥</span> Перегородка</button>
+    <button class="tab" data-tab="kladka"><span class="tab-icon">▤</span> Кладка</button>
+    <button class="tab" data-tab="shtukaturka"><span class="tab-icon">≡</span> Штукатурка</button>
+    <button class="tab" data-tab="shpaklevka"><span class="tab-icon">◆</span> Шпаклёвка</button>
+    <button class="tab" data-tab="kraska"><span class="tab-icon">●</span> Краска</button>
+    <button class="tab" data-tab="plitka"><span class="tab-icon">▣</span> Плитка</button>
+    <button class="tab" data-tab="armstrong"><span class="tab-icon">⊞</span> Армстронг</button>
   </div>
 </div>
 
-<div class="header">
-  <h1>КАЛЬКУЛЯТОР МАТЕРИАЛОВ</h1>
-  <p>Расчёт материалов для отделочных работ</p>
-</div>
-
-<div class="tabs">
-  <button class="tab active" data-tab="obsh">Обшивка ГКЛ</button>
-  <button class="tab" data-tab="peregorodka">Перегородка</button>
-  <button class="tab" data-tab="shpaklevka">Шпаклёвка</button>
-  <button class="tab" data-tab="kraska">Краска</button>
-  <button class="tab" data-tab="plitka">Плитка</button>
-  <button class="tab" data-tab="shtukaturka">Штукатурка</button>
-  <button class="tab" data-tab="armstrong">Армстронг</button>
-</div>
-
 <div id="obsh" class="section active">
-  <div class="section-desc">Расчёт материалов для обшивки стен и потолков гипсокартоном на металлическом каркасе.</div>
+  <div class="section-desc">Обшивка стен и потолков гипсокартоном на металлическом каркасе.</div>
   <div class="grid">
     <div class="card">
-      <div class="card-label">Параметры помещения</div>
+      <div class="card-label">Параметры</div>
       <div class="field">
         <label>Тип обшивки</label>
         <select id="o-type" onchange="calcObsh()">
@@ -156,12 +414,12 @@
       <div class="field"><label>Высота, м</label><input type="number" id="o-h" value="2.7" min="0" step="0.05" oninput="calcObsh()"></div>
       <hr class="divider">
       <div class="row">
-        <div class="field"><label>Дверей, шт</label><input type="number" id="o-doors" value="1" min="0" oninput="calcObsh()"></div>
-        <div class="field"><label>Окон, шт</label><input type="number" id="o-wins" value="1" min="0" oninput="calcObsh()"></div>
+        <div class="field"><label>Дверей</label><input type="number" id="o-doors" value="1" min="0" oninput="calcObsh()"></div>
+        <div class="field"><label>Окон</label><input type="number" id="o-wins" value="1" min="0" oninput="calcObsh()"></div>
       </div>
       <hr class="divider">
       <div class="field">
-        <label>Шаг стоек / профилей</label>
+        <label>Шаг профилей</label>
         <select id="o-step" onchange="calcObsh()">
           <option value="0.4">400 мм (усиленный)</option>
           <option value="0.6" selected>600 мм (стандарт)</option>
@@ -174,18 +432,21 @@
           <option value="2">2 слоя (25 мм)</option>
         </select>
       </div>
-      <div class="checkbox-row"><input type="checkbox" id="o-reserve" onchange="calcObsh()"><label for="o-reserve">Запас 10% на подрезку</label></div>
-      <button class="btn" onclick="calcObsh()">РАССЧИТАТЬ</button>
+      <div class="checkbox-row"><input type="checkbox" id="o-reserve" onchange="calcObsh()"><label for="o-reserve">Запас 10%</label></div>
+      <button class="btn" onclick="calcObsh()">Рассчитать</button>
     </div>
-    <div class="card"><div class="card-label">Результат расчёта</div><div class="results" id="obsh-results"></div></div>
+    <div class="card">
+      <div class="card-label">Спецификация</div>
+      <div class="results" id="obsh-results"></div>
+    </div>
   </div>
 </div>
 
 <div id="peregorodka" class="section">
-  <div class="section-desc">Расчёт перегородки из ГКЛ на каркасе CW/UW. Обшивка с двух сторон.</div>
+  <div class="section-desc">Перегородка из ГКЛ на каркасе CW/UW. Обшивка с двух сторон.</div>
   <div class="grid">
     <div class="card">
-      <div class="card-label">Параметры перегородки</div>
+      <div class="card-label">Параметры</div>
       <div class="row">
         <div class="field"><label>Длина, м</label><input type="number" id="p-len" value="4" min="0" step="0.1" oninput="calcPereg()"></div>
         <div class="field"><label>Высота, м</label><input type="number" id="p-h" value="2.7" min="0" step="0.05" oninput="calcPereg()"></div>
@@ -202,24 +463,121 @@
         </select>
       </div>
       <div class="field">
-        <label>Ширина профиля CW, мм</label>
+        <label>Ширина профиля CW</label>
         <select id="p-prof" onchange="calcPereg()">
           <option value="50">CW 50</option><option value="75" selected>CW 75</option><option value="100">CW 100</option>
         </select>
       </div>
-      <div class="field"><label>Дверные проёмы, шт</label><input type="number" id="p-doors" value="0" min="0" oninput="calcPereg()"></div>
+      <div class="field"><label>Дверные проёмы</label><input type="number" id="p-doors" value="0" min="0" oninput="calcPereg()"></div>
       <div class="checkbox-row"><input type="checkbox" id="p-reserve" onchange="calcPereg()"><label for="p-reserve">Запас 10%</label></div>
-      <button class="btn" onclick="calcPereg()">РАССЧИТАТЬ</button>
+      <button class="btn" onclick="calcPereg()">Рассчитать</button>
     </div>
-    <div class="card"><div class="card-label">Результат расчёта</div><div class="results" id="pereg-results"></div></div>
+    <div class="card">
+      <div class="card-label">Спецификация</div>
+      <div class="results" id="pereg-results"></div>
+    </div>
+  </div>
+</div>
+
+<div id="kladka" class="section">
+  <div class="section-desc">Расчёт кладки: кирпич, пеноблоки, газоблоки, керамзитоблоки. С раствором и армированием.</div>
+  <div class="grid">
+    <div class="card">
+      <div class="card-label">Параметры стены</div>
+      <div class="row">
+        <div class="field"><label>Длина, м</label><input type="number" id="kl-len" value="5" min="0" step="0.1" oninput="calcKladka()"></div>
+        <div class="field"><label>Высота, м</label><input type="number" id="kl-h" value="3" min="0" step="0.1" oninput="calcKladka()"></div>
+      </div>
+      <div class="row">
+        <div class="field"><label>Дверей</label><input type="number" id="kl-doors" value="1" min="0" oninput="calcKladka()"></div>
+        <div class="field"><label>Окон</label><input type="number" id="kl-wins" value="1" min="0" oninput="calcKladka()"></div>
+      </div>
+      <hr class="divider">
+      <div class="field">
+        <label>Материал кладки</label>
+        <select id="kl-mat" onchange="calcKladka()">
+          <optgroup label="Кирпич">
+            <option value="brick-single">Кирпич одинарный (250×120×65)</option>
+            <option value="brick-onehalf">Кирпич полуторный (250×120×88)</option>
+            <option value="brick-double">Кирпич двойной (250×120×138)</option>
+          </optgroup>
+          <optgroup label="Блоки">
+            <option value="penoblock" selected>Пеноблок (600×300×200)</option>
+            <option value="gasblock">Газоблок (625×250×200)</option>
+            <option value="keramzit">Керамзитоблок (390×190×188)</option>
+          </optgroup>
+        </select>
+      </div>
+      <div class="field">
+        <label>Толщина стены (для кирпича)</label>
+        <select id="kl-thick" onchange="calcKladka()">
+          <option value="0.5">0.5 кирпича (120 мм)</option>
+          <option value="1" selected>1 кирпич (250 мм)</option>
+          <option value="1.5">1.5 кирпича (380 мм)</option>
+          <option value="2">2 кирпича (510 мм)</option>
+        </select>
+        <div class="hint">Для блоков толщина = ширина блока</div>
+      </div>
+      <div class="field">
+        <label>Тип раствора</label>
+        <select id="kl-mortar" onchange="calcKladka()">
+          <option value="cement" selected>Цементно-песчаный</option>
+          <option value="glue">Клей для блоков (тонкошовный)</option>
+        </select>
+      </div>
+      <hr class="divider">
+      <div class="checkbox-row"><input type="checkbox" id="kl-armir" checked onchange="calcKladka()"><label for="kl-armir">Армирование (каждые 4 ряда)</label></div>
+      <div class="checkbox-row"><input type="checkbox" id="kl-reserve" checked onchange="calcKladka()"><label for="kl-reserve">Запас 5% на бой</label></div>
+      <button class="btn" onclick="calcKladka()">Рассчитать</button>
+    </div>
+    <div class="card">
+      <div class="card-label">Спецификация</div>
+      <div class="results" id="kladka-results"></div>
+    </div>
+  </div>
+</div>
+
+<div id="shtukaturka" class="section">
+  <div class="section-desc">Штукатурка для выравнивания стен.</div>
+  <div class="grid">
+    <div class="card">
+      <div class="card-label">Параметры</div>
+      <div class="field"><label>Площадь стен, м²</label><input type="number" id="st-area" value="50" min="0" step="0.5" oninput="calcShtuk()"></div>
+      <div class="field"><label>Толщина слоя, мм</label><input type="number" id="st-thick" value="15" min="3" max="100" oninput="calcShtuk()"></div>
+      <div class="field">
+        <label>Тип штукатурки</label>
+        <select id="st-type" onchange="calcShtuk()">
+          <option value="gypsum" selected>Гипсовая</option>
+          <option value="cement">Цементная</option>
+          <option value="lime">Известковая</option>
+          <option value="decorative">Декоративная</option>
+        </select>
+      </div>
+      <div class="field">
+        <label>Упаковка</label>
+        <select id="st-pack" onchange="calcShtuk()">
+          <option value="25">25 кг</option><option value="30" selected>30 кг</option>
+        </select>
+      </div>
+      <hr class="divider">
+      <div class="checkbox-row"><input type="checkbox" id="st-mesh" onchange="calcShtuk()"><label for="st-mesh">Армирующая сетка</label></div>
+      <div class="checkbox-row"><input type="checkbox" id="st-mayak" checked onchange="calcShtuk()"><label for="st-mayak">Маяки штукатурные</label></div>
+      <div class="checkbox-row"><input type="checkbox" id="st-grunt" checked onchange="calcShtuk()"><label for="st-grunt">Грунтовка</label></div>
+      <div class="checkbox-row"><input type="checkbox" id="st-reserve" onchange="calcShtuk()"><label for="st-reserve">Запас 10%</label></div>
+      <button class="btn" onclick="calcShtuk()">Рассчитать</button>
+    </div>
+    <div class="card">
+      <div class="card-label">Спецификация</div>
+      <div class="results" id="shtuk-results"></div>
+    </div>
   </div>
 </div>
 
 <div id="shpaklevka" class="section">
-  <div class="section-desc">Расчёт шпаклёвки. Стартовая ~1.2 кг/м², финишная ~0.5 кг/м² за слой.</div>
+  <div class="section-desc">Шпаклёвка для финишной отделки. Стартовая ~1.2 кг/м², финишная ~0.5 кг/м² за слой.</div>
   <div class="grid">
     <div class="card">
-      <div class="card-label">Параметры поверхности</div>
+      <div class="card-label">Параметры</div>
       <div class="field"><label>Площадь, м²</label><input type="number" id="sh-area" value="50" min="0" step="0.5" oninput="calcShp()"></div>
       <div class="field">
         <label>Тип шпаклёвки</label>
@@ -242,24 +600,27 @@
         </select>
       </div>
       <div class="field">
-        <label>Упаковка, кг</label>
+        <label>Упаковка</label>
         <select id="sh-pack" onchange="calcShp()">
           <option value="5">5 кг</option><option value="10">10 кг</option>
           <option value="20">20 кг</option><option value="25" selected>25 кг</option>
         </select>
       </div>
       <div class="checkbox-row"><input type="checkbox" id="sh-reserve" onchange="calcShp()"><label for="sh-reserve">Запас 10%</label></div>
-      <button class="btn" onclick="calcShp()">РАССЧИТАТЬ</button>
+      <button class="btn" onclick="calcShp()">Рассчитать</button>
     </div>
-    <div class="card"><div class="card-label">Результат расчёта</div><div class="results" id="shp-results"></div></div>
+    <div class="card">
+      <div class="card-label">Спецификация</div>
+      <div class="results" id="shp-results"></div>
+    </div>
   </div>
 </div>
 
 <div id="kraska" class="section">
-  <div class="section-desc">Расчёт расхода краски для стен и потолков.</div>
+  <div class="section-desc">Расход краски для стен и потолков.</div>
   <div class="grid">
     <div class="card">
-      <div class="card-label">Параметры окраски</div>
+      <div class="card-label">Параметры</div>
       <div class="field"><label>Площадь, м²</label><input type="number" id="k-area" value="50" min="0" step="0.5" oninput="calcKraska()"></div>
       <div class="field">
         <label>Тип краски</label>
@@ -295,17 +656,20 @@
         </select>
       </div>
       <div class="checkbox-row"><input type="checkbox" id="k-reserve" onchange="calcKraska()"><label for="k-reserve">Запас 10%</label></div>
-      <button class="btn" onclick="calcKraska()">РАССЧИТАТЬ</button>
+      <button class="btn" onclick="calcKraska()">Рассчитать</button>
     </div>
-    <div class="card"><div class="card-label">Результат расчёта</div><div class="results" id="kraska-results"></div></div>
+    <div class="card">
+      <div class="card-label">Спецификация</div>
+      <div class="results" id="kraska-results"></div>
+    </div>
   </div>
 </div>
 
 <div id="plitka" class="section">
-  <div class="section-desc">Расчёт плитки, клея и затирки.</div>
+  <div class="section-desc">Плитка, клей и затирка.</div>
   <div class="grid">
     <div class="card">
-      <div class="card-label">Параметры укладки</div>
+      <div class="card-label">Параметры</div>
       <div class="field"><label>Площадь, м²</label><input type="number" id="t-area" value="20" min="0" step="0.5" oninput="calcTile()"></div>
       <div class="field">
         <label>Размер плитки</label>
@@ -334,7 +698,7 @@
           </select>
         </div>
         <div class="field">
-          <label>Подрезка, %</label>
+          <label>Подрезка</label>
           <select id="t-cut" onchange="calcTile()">
             <option value="5">5%</option><option value="10" selected>10%</option>
             <option value="15">15%</option><option value="20">20%</option>
@@ -363,53 +727,20 @@
           <option value="1">1 кг</option><option value="2" selected>2 кг</option><option value="5">5 кг</option>
         </select>
       </div>
-      <button class="btn" onclick="calcTile()">РАССЧИТАТЬ</button>
+      <button class="btn" onclick="calcTile()">Рассчитать</button>
     </div>
-    <div class="card"><div class="card-label">Результат расчёта</div><div class="results" id="tile-results"></div></div>
-  </div>
-</div>
-
-<div id="shtukaturka" class="section">
-  <div class="section-desc">Расчёт штукатурки для выравнивания стен.</div>
-  <div class="grid">
     <div class="card">
-      <div class="card-label">Параметры штукатурки</div>
-      <div class="field"><label>Площадь стен, м²</label><input type="number" id="st-area" value="50" min="0" step="0.5" oninput="calcShtuk()"></div>
-      <div class="field">
-        <label>Толщина слоя, мм</label>
-        <input type="number" id="st-thick" value="15" min="3" max="100" oninput="calcShtuk()">
-      </div>
-      <div class="field">
-        <label>Тип штукатурки</label>
-        <select id="st-type" onchange="calcShtuk()">
-          <option value="gypsum" selected>Гипсовая</option>
-          <option value="cement">Цементная</option>
-          <option value="lime">Известковая</option>
-          <option value="decorative">Декоративная</option>
-        </select>
-      </div>
-      <div class="field">
-        <label>Упаковка</label>
-        <select id="st-pack" onchange="calcShtuk()">
-          <option value="25">25 кг</option><option value="30" selected>30 кг</option>
-        </select>
-      </div>
-      <hr class="divider">
-      <div class="checkbox-row"><input type="checkbox" id="st-mesh" onchange="calcShtuk()"><label for="st-mesh">Армирующая сетка</label></div>
-      <div class="checkbox-row"><input type="checkbox" id="st-mayak" checked onchange="calcShtuk()"><label for="st-mayak">Маяки штукатурные</label></div>
-      <div class="checkbox-row"><input type="checkbox" id="st-grunt" checked onchange="calcShtuk()"><label for="st-grunt">Грунтовка</label></div>
-      <div class="checkbox-row"><input type="checkbox" id="st-reserve" onchange="calcShtuk()"><label for="st-reserve">Запас 10%</label></div>
-      <button class="btn" onclick="calcShtuk()">РАССЧИТАТЬ</button>
+      <div class="card-label">Спецификация</div>
+      <div class="results" id="tile-results"></div>
     </div>
-    <div class="card"><div class="card-label">Результат расчёта</div><div class="results" id="shtuk-results"></div></div>
   </div>
 </div>
 
 <div id="armstrong" class="section">
-  <div class="section-desc">Расчёт подвесного потолка Армстронг.</div>
+  <div class="section-desc">Подвесной потолок Армстронг.</div>
   <div class="grid">
     <div class="card">
-      <div class="card-label">Параметры потолка</div>
+      <div class="card-label">Параметры</div>
       <div class="row">
         <div class="field"><label>Длина, м</label><input type="number" id="a-len" value="6" min="0" step="0.1" oninput="calcArm()"></div>
         <div class="field"><label>Ширина, м</label><input type="number" id="a-wid" value="4" min="0" step="0.1" oninput="calcArm()"></div>
@@ -432,13 +763,21 @@
         </select>
       </div>
       <div class="checkbox-row"><input type="checkbox" id="a-reserve" checked onchange="calcArm()"><label for="a-reserve">Запас 5%</label></div>
-      <button class="btn" onclick="calcArm()">РАССЧИТАТЬ</button>
+      <button class="btn" onclick="calcArm()">Рассчитать</button>
     </div>
-    <div class="card"><div class="card-label">Результат расчёта</div><div class="results" id="arm-results"></div></div>
+    <div class="card">
+      <div class="card-label">Спецификация</div>
+      <div class="results" id="arm-results"></div>
+    </div>
   </div>
 </div>
 
-<div class="footer-brand"><span>МигРемонт</span> · Качество. Сроки. Ответственность.</div>
+<div class="footer">
+  <div class="footer-brand">МигРемонт</div>
+  <div class="footer-tagline">Качество · Сроки · Ответственность</div>
+  <a href="https://migremont.pro" target="_blank" class="footer-link">migremont.pro</a>
+  <div class="footer-copy">© Ремонт коммерческих помещений</div>
+</div>
 
 <script>
 function ri(id){return parseFloat(document.getElementById(id).value)||0}
@@ -448,6 +787,21 @@ function ceil(n){return Math.ceil(n)}
 function r2(n){return Math.round(n*100)/100}
 function ri_item(name,value,unit,tag){return '<div class="result-item"><span class="result-name">'+name+(tag?'<span class="tag '+tag.cls+'">'+tag.txt+'</span>':'')+'</span><span class="result-value">'+value+'<span>'+unit+'</span></span></div>'}
 function ri_group(title,items){return '<div class="result-group"><div class="result-group-title">'+title+'</div>'+items+'</div>'}
+
+function cta(){
+  return '<div class="cta-block">'+
+    '<div class="cta-badge">Профессиональный подход</div>'+
+    '<div class="cta-title">Доверьте ремонт<br>профессионалам</div>'+
+    '<div class="cta-subtitle">Бесплатный выезд специалиста и точный расчёт стоимости работ под ключ</div>'+
+    '<div class="cta-features">'+
+      '<span class="cta-feature">Опыт 10+ лет</span>'+
+      '<span class="cta-feature">Гарантия</span>'+
+      '<span class="cta-feature">Точные сроки</span>'+
+    '</div>'+
+    '<a href="https://migremont.pro" target="_blank" class="cta-btn">Заказать расчёт</a>'+
+    '<a href="https://migremont.pro" target="_blank" class="cta-link">migremont.pro</a>'+
+  '</div>';
+}
 
 function calcObsh(){
   var type=rv('o-type'),L=ri('o-len'),W=ri('o-wid'),H=ri('o-h');
@@ -479,7 +833,7 @@ function calcObsh(){
   var dyubeli=ceil(udLen*2+hangers);
   var rT=reserve?{cls:'plus',txt:'+10%'}:null;
   var stepLabel=step===0.4?'400 мм':'600 мм';
-  var html='<div class="results-title">СПЕЦИФИКАЦИЯ МАТЕРИАЛОВ</div>'+
+  var html='<div class="results-title">Спецификация</div>'+
     ri_group('ГКЛ и профили',
       ri_item('Листы ГКЛ 1200×2500×12.5',sheets,'шт',rT)+
       ri_item('Профиль UD/UW',ceil(udLen),'п.м.')+
@@ -496,7 +850,7 @@ function calcObsh(){
       (wallArea>0?ri_item('Стены',r2(wallArea),'м²'):'')+
       (ceilArea>0?ri_item('Потолок',r2(ceilArea),'м²'):'')+
       ri_item('Итого',r2(totalArea),'м²'));
-  document.getElementById('obsh-results').innerHTML=html;
+  document.getElementById('obsh-results').innerHTML=html+cta();
 }
 
 function calcPereg(){
@@ -518,7 +872,7 @@ function calcPereg(){
   var dyubeli=ceil(uw*2),vata=r2(area);
   var rT=reserve?{cls:'plus',txt:'+10%'}:null;
   var stepLabel=step===0.4?'400 мм':'600 мм';
-  var html='<div class="results-title">СПЕЦИФИКАЦИЯ МАТЕРИАЛОВ</div>'+
+  var html='<div class="results-title">Спецификация</div>'+
     ri_group('ГКЛ и профили',
       ri_item('Листы ГКЛ 1200×2500×12.5',sheets,'шт',rT)+
       ri_item('Профиль UW-'+profW,uw,'п.м.')+
@@ -535,7 +889,123 @@ function calcPereg(){
     ri_group('Площади',
       ri_item('Площадь',r2(area),'м²')+
       ri_item('ГКЛ с двух сторон',r2(area*2),'м²'));
-  document.getElementById('pereg-results').innerHTML=html;
+  document.getElementById('pereg-results').innerHTML=html+cta();
+}
+
+var KLADKA_MAT = {
+  'brick-single': {name:'Кирпич одинарный', size:[250,120,65], perM2_05:51, perM2_1:102, perM2_15:153, perM2_2:204, weight:3.5, isBrick:true},
+  'brick-onehalf': {name:'Кирпич полуторный', size:[250,120,88], perM2_05:39, perM2_1:78, perM2_15:117, perM2_2:156, weight:4.0, isBrick:true},
+  'brick-double': {name:'Кирпич двойной', size:[250,120,138], perM2_05:26, perM2_1:52, perM2_15:78, perM2_2:104, weight:5.4, isBrick:true},
+  'penoblock': {name:'Пеноблок', size:[600,300,200], perM2:8.3, thickness:300, weight:14, isBrick:false},
+  'gasblock': {name:'Газоблок', size:[625,250,200], perM2:8.0, thickness:250, weight:18, isBrick:false},
+  'keramzit': {name:'Керамзитоблок', size:[390,190,188], perM2:13.6, thickness:190, weight:14, isBrick:false}
+};
+
+function calcKladka(){
+  var L=ri('kl-len'),H=ri('kl-h');
+  var doors=ri('kl-doors'),wins=ri('kl-wins');
+  var matKey=rv('kl-mat'),thickKey=rv('kl-thick');
+  var mortarType=rv('kl-mortar');
+  var armir=rb('kl-armir'),reserve=rb('kl-reserve');
+  var DOOR=2.0*0.9,WIN=1.5*1.2;
+  var area=L*H-doors*DOOR-wins*WIN;
+  if(area<=0)return;
+  var mat=KLADKA_MAT[matKey];
+  var count=0,thickness=0,thickLabel='';
+  if(mat.isBrick){
+    var perM2;
+    if(thickKey==='0.5'){perM2=mat.perM2_05;thickness=120;thickLabel='0.5 кирпича'}
+    else if(thickKey==='1'){perM2=mat.perM2_1;thickness=250;thickLabel='1 кирпич'}
+    else if(thickKey==='1.5'){perM2=mat.perM2_15;thickness=380;thickLabel='1.5 кирпича'}
+    else {perM2=mat.perM2_2;thickness=510;thickLabel='2 кирпича'}
+    count=Math.ceil(area*perM2);
+  } else {
+    count=Math.ceil(area*mat.perM2);
+    thickness=mat.thickness;
+    thickLabel=thickness+' мм';
+  }
+  if(reserve)count=Math.ceil(count*1.05);
+  var volume=area*(thickness/1000);
+  var rT=reserve?{cls:'plus',txt:'+5%'}:null;
+  var html='<div class="results-title">Спецификация</div>'+
+    ri_group(mat.name,
+      ri_item(mat.name,count,'шт',rT)+
+      ri_item('Размер',mat.size[0]+'×'+mat.size[1]+'×'+mat.size[2],'мм')+
+      ri_item('Толщина стены',thickLabel,'')+
+      ri_item('Объём кладки',r2(volume),'м³')+
+      ri_item('Вес кладки (≈)',Math.ceil(count*mat.weight),'кг'));
+  if(mortarType==='cement'){
+    var mortarM3=volume*0.25;
+    var cement=Math.ceil(mortarM3*330);
+    var sand=Math.ceil(mortarM3*1100);
+    var cement_bags=Math.ceil(cement/50);
+    var blockH=mat.size[2];
+    var rowsCount=Math.floor(H*1000/(blockH+10));
+    var armirRows=Math.floor(rowsCount/4);
+    var armirLen=armir?Math.ceil(L*armirRows):0;
+    var armirSheets=armir?Math.ceil(armirLen/2):0;
+    html+=ri_group('Раствор цементно-песчаный',
+      ri_item('Объём раствора',r2(mortarM3),'м³')+
+      ri_item('Цемент М500',cement,'кг')+
+      ri_item('Цемент в мешках 50кг',cement_bags,'шт')+
+      ri_item('Песок строительный',sand,'кг')+
+      ri_item('Песок (≈ м³)',r2(sand/1500),'м³'));
+    if(armir){
+      html+=ri_group('Армирование',
+        ri_item('Сетка кладочная',armirLen,'п.м.')+
+        ri_item('Сетки по 2 м',armirSheets,'шт')+
+        ri_item('Армируется рядов',armirRows,''));
+    }
+  } else {
+    var glueKg=Math.ceil(volume*28);
+    var glueBags=Math.ceil(glueKg/25);
+    var blockH=mat.size[2];
+    var rowsCount=Math.floor(H*1000/(blockH+3));
+    var armirRows=Math.floor(rowsCount/4);
+    var armirLen=armir?Math.ceil(L*armirRows*2):0;
+    var armirKg=armir?Math.ceil(armirLen*0.395):0;
+    html+=ri_group('Клей для блоков',
+      ri_item('Расход клея',glueKg,'кг')+
+      ri_item('Мешков по 25 кг',glueBags,'шт'));
+    if(armir){
+      html+=ri_group('Армирование',
+        ri_item('Арматура d8',armirLen,'п.м.')+
+        ri_item('Вес арматуры',armirKg,'кг')+
+        ri_item('Армируется рядов',armirRows,''));
+    }
+  }
+  html+=ri_group('Площадь',
+    ri_item('Площадь стены (чистая)',r2(area),'м²')+
+    ri_item('С учётом проёмов',r2(L*H),'м²'));
+  document.getElementById('kladka-results').innerHTML=html+cta();
+}
+
+var PLASTER={gypsum:9,cement:17,lime:14,decorative:3};
+function calcShtuk(){
+  var area=ri('st-area'),thick=ri('st-thick'),type=rv('st-type'),pack=parseFloat(rv('st-pack'));
+  var useMesh=rb('st-mesh'),useMayak=rb('st-mayak'),useGrunt=rb('st-grunt'),reserve=rb('st-reserve');
+  if(area<=0||thick<=0)return;
+  var kg=PLASTER[type]*(thick/10)*area;
+  if(reserve)kg*=1.1;
+  var bags=ceil(kg/pack);
+  var mayakLen=ceil(area*1.5),mayakCount=ceil(mayakLen/3);
+  var meshArea=r2(area*1.05),gruntKg=r2(area*0.3);
+  var names={gypsum:'Гипсовая',cement:'Цементная',lime:'Известковая',decorative:'Декоративная'};
+  var rT=reserve?{cls:'plus',txt:'+10%'}:null;
+  var html='<div class="results-title">Спецификация</div>'+
+    ri_group('Штукатурка — '+names[type],
+      ri_item('Расход',r2(kg),'кг',rT)+
+      ri_item('Мешков по '+pack+' кг',bags,'шт')+
+      ri_item('Толщина',thick,'мм'));
+  if(useMayak||useMesh){
+    var items='';
+    if(useMayak){items+=ri_item('Маяки (3м)',mayakCount,'шт');items+=ri_item('Раствор для маяков',r2(area*0.5),'кг')}
+    if(useMesh)items+=ri_item('Сетка',meshArea,'м²');
+    html+=ri_group('Армирование',items);
+  }
+  if(useGrunt)html+=ri_group('Грунтовка',ri_item('Бетоконтакт',gruntKg,'кг'));
+  html+=ri_group('Площадь',ri_item('Площадь',r2(area),'м²'));
+  document.getElementById('shtuk-results').innerHTML=html+cta();
 }
 
 function calcShp(){
@@ -549,7 +1019,7 @@ function calcShp(){
   if(reserve){startKg*=1.1;finishKg*=1.1}
   var startBags=ceil(startKg/pack),finishBags=ceil(finishKg/pack);
   var rT=reserve?{cls:'plus',txt:'+10%'}:null;
-  var html='<div class="results-title">СПЕЦИФИКАЦИЯ МАТЕРИАЛОВ</div>';
+  var html='<div class="results-title">Спецификация</div>';
   if(type==='start'||type==='both')html+=ri_group('Стартовая',
     ri_item('Расход',r2(startKg),'кг',rT)+
     ri_item('Мешков по '+pack+' кг',startBags,'шт'));
@@ -558,7 +1028,7 @@ function calcShp(){
     ri_item('Мешков по '+pack+' кг',finishBags,'шт'));
   if(type==='both')html+=ri_group('Итого',
     ri_item('Суммарно',r2(startKg+finishKg),'кг'));
-  document.getElementById('shp-results').innerHTML=html;
+  document.getElementById('shp-results').innerHTML=html+cta();
 }
 
 var PAINT={water:12,acryl:10,latex:8,facade:7,custom:0};
@@ -575,7 +1045,7 @@ function calcKraska(){
   if(grunt){gruntL=area/10;if(reserve)gruntL*=1.1;gruntCans=ceil(gruntL/5)}
   var rT=reserve?{cls:'plus',txt:'+10%'}:null;
   var names={water:'Водоэмульсионная',acryl:'Акриловая',latex:'Латексная',facade:'Фасадная',custom:'Своя'};
-  var html='<div class="results-title">СПЕЦИФИКАЦИЯ МАТЕРИАЛОВ</div>'+
+  var html='<div class="results-title">Спецификация</div>'+
     ri_group('Краска — '+names[type],
       ri_item('Расход',r2(liters),'л',rT)+
       ri_item('Банок по '+can+' л',cans,'шт')+
@@ -585,7 +1055,7 @@ function calcKraska(){
       ri_item('Банок по 5 л',gruntCans,'шт')):'')+
     ri_group('Площадь',
       ri_item('Площадь окраски',r2(area),'м²'));
-  document.getElementById('kraska-results').innerHTML=html;
+  document.getElementById('kraska-results').innerHTML=html+cta();
 }
 
 function calcTile(){
@@ -606,7 +1076,7 @@ function calcTile(){
   var groutPacks=ceil(groutKg/groutPack);
   var crosses=ceil(tilesNeed*4*1.1);
   var sizeLabel=tw+'×'+th+' мм';
-  var html='<div class="results-title">СПЕЦИФИКАЦИЯ МАТЕРИАЛОВ</div>'+
+  var html='<div class="results-title">Спецификация</div>'+
     ri_group('Плитка',
       ri_item('Плитка '+sizeLabel,tilesNeed,'шт',{cls:'plus',txt:'+'+cut+'%'})+
       ri_item('Без подрезки',ceil(tilesBase),'шт'))+
@@ -620,35 +1090,7 @@ function calcTile(){
     ri_group('Расходники',
       ri_item('Крестики',crosses,'шт')+
       ri_item('Грунтовка',grunt,'л'));
-  document.getElementById('tile-results').innerHTML=html;
-}
-
-var PLASTER={gypsum:9,cement:17,lime:14,decorative:3};
-function calcShtuk(){
-  var area=ri('st-area'),thick=ri('st-thick'),type=rv('st-type'),pack=parseFloat(rv('st-pack'));
-  var useMesh=rb('st-mesh'),useMayak=rb('st-mayak'),useGrunt=rb('st-grunt'),reserve=rb('st-reserve');
-  if(area<=0||thick<=0)return;
-  var kg=PLASTER[type]*(thick/10)*area;
-  if(reserve)kg*=1.1;
-  var bags=ceil(kg/pack);
-  var mayakLen=ceil(area*1.5),mayakCount=ceil(mayakLen/3);
-  var meshArea=r2(area*1.05),gruntKg=r2(area*0.3);
-  var names={gypsum:'Гипсовая',cement:'Цементная',lime:'Известковая',decorative:'Декоративная'};
-  var rT=reserve?{cls:'plus',txt:'+10%'}:null;
-  var html='<div class="results-title">СПЕЦИФИКАЦИЯ МАТЕРИАЛОВ</div>'+
-    ri_group('Штукатурка — '+names[type],
-      ri_item('Расход',r2(kg),'кг',rT)+
-      ri_item('Мешков по '+pack+' кг',bags,'шт')+
-      ri_item('Толщина',thick,'мм'));
-  if(useMayak||useMesh){
-    var items='';
-    if(useMayak){items+=ri_item('Маяки (3м)',mayakCount,'шт');items+=ri_item('Раствор для маяков',r2(area*0.5),'кг')}
-    if(useMesh)items+=ri_item('Сетка',meshArea,'м²');
-    html+=ri_group('Армирование',items);
-  }
-  if(useGrunt)html+=ri_group('Грунтовка',ri_item('Бетоконтакт',gruntKg,'кг'));
-  html+=ri_group('Площадь',ri_item('Площадь',r2(area),'м²'));
-  document.getElementById('shtuk-results').innerHTML=html;
+  document.getElementById('tile-results').innerHTML=html+cta();
 }
 
 function calcArm(){
@@ -672,7 +1114,7 @@ function calcArm(){
   var dyubeli=ceil(wallAngle/0.5);
   var names={standard:'Стандартная',moisture:'Влагостойкая',acoustic:'Акустическая',hygiene:'Гигиеническая'};
   var rT=reserve?{cls:'plus',txt:'+5%'}:null;
-  var html='<div class="results-title">СПЕЦИФИКАЦИЯ МАТЕРИАЛОВ</div>'+
+  var html='<div class="results-title">Спецификация</div>'+
     ri_group('Плиты',
       ri_item('Плита '+tileSize.replace('x','×')+' мм',tiles,'шт',rT)+
       ri_item('Тип',names[tileType],'')+
@@ -689,7 +1131,7 @@ function calcArm(){
     ri_group('Параметры',
       ri_item('Площадь',r2(area),'м²')+
       ri_item('Высота подвеса',drop,'мм'));
-  document.getElementById('arm-results').innerHTML=html;
+  document.getElementById('arm-results').innerHTML=html+cta();
 }
 
 document.querySelectorAll('.tab').forEach(function(tab){
@@ -701,8 +1143,8 @@ document.querySelectorAll('.tab').forEach(function(tab){
   });
 });
 
-calcObsh();calcPereg();calcShp();calcKraska();
-calcTile();calcShtuk();calcArm();
+calcObsh();calcPereg();calcKladka();calcShtuk();
+calcShp();calcKraska();calcTile();calcArm();
 </script>
 
 </body>
