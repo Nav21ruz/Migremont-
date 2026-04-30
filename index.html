@@ -4,130 +4,139 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="color-scheme" content="light">
+<meta name="color-scheme" content="dark">
 <title>МигРемонт — Калькулятор материалов</title>
-<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Oswald:wght@500;600;700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500;600;700&display=swap" rel="stylesheet">
 <style>
   :root {
-    color-scheme: light;
-    --white: #ffffff;
-    --bg: #f4f4f4;
-    --surface: #ffffff;
-    --surface2: #fafafa;
-    --light-gray: #e5e5e5;
-    --gray: #999999;
-    --dark-gray: #4a4a4a;
-    --darker: #2a2a2a;
-    --black: #1a1a1a;
-    --pure-black: #0a0a0a;
-    --green: #4ade80;
-    --green-dim: #6ee7a3;
+    color-scheme: dark;
+    --bg: #1c1c1c;
+    --bg2: #252525;
+    --surface: #2a2a2a;
+    --surface2: #333333;
+    --border: #3a3a3a;
+    --border-bright: #4a4a4a;
+    --text: #ffffff;
+    --text2: #c0c0c0;
+    --muted: #808080;
+    --accent: #ff6b00;
+    --accent-hover: #ff8533;
+    --accent-text: #1c1c1c;
+    --green: #00ff88;
+    --result-bg: #0d0d0d;
   }
   * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
 
 body {
 background: var(–bg);
-color: var(–black);
+color: var(–text);
 font-family: ‘Inter’, -apple-system, sans-serif;
 min-height: 100vh;
 padding: 16px;
+-webkit-font-smoothing: antialiased;
+background-image:
+linear-gradient(rgba(255,255,255,0.015) 1px, transparent 1px),
+linear-gradient(90deg, rgba(255,255,255,0.015) 1px, transparent 1px);
+background-size: 40px 40px;
+background-attachment: fixed;
 }
 
 .container { max-width: 1200px; margin: 0 auto; }
 
-/* ============ BRAND ============ */
 .brand {
-background: var(–black);
-padding: 28px 20px;
-border-radius: 16px;
-margin-bottom: 22px;
+background: var(–bg);
+padding: 32px 24px;
+border: 1px solid var(–border);
+border-radius: 4px;
+margin-bottom: 24px;
 text-align: center;
 position: relative;
 overflow: hidden;
-box-shadow: 0 10px 30px rgba(0,0,0,0.15);
 }
 .brand::before {
 content: ‘’;
 position: absolute;
 top: 0; left: 0; right: 0;
-height: 2px;
-background: linear-gradient(90deg, transparent, var(–white), transparent);
-opacity: 0.3;
+height: 4px;
+background: var(–accent);
 }
 .brand img {
 max-width: 100%;
-max-height: 80px;
+max-height: 90px;
 filter: brightness(0) invert(1);
 position: relative;
 z-index: 1;
 }
 .brand-text {
-font-family: ‘Bebas Neue’, sans-serif;
-color: var(–white);
-font-size: 2.6rem;
+font-family: ‘Oswald’, sans-serif;
+color: var(–text);
+font-size: 2.8rem;
 letter-spacing: 4px;
 line-height: 1;
-}
-.brand-text span { color: var(–gray); }
-.brand-sub {
-color: rgba(255,255,255,0.7);
-font-size: 0.72rem;
-letter-spacing: 2.5px;
+font-weight: 700;
 text-transform: uppercase;
-margin-top: 10px;
-font-weight: 500;
+}
+.brand-text span { color: var(–accent); }
+.brand-sub {
+color: var(–text2);
+font-size: 0.72rem;
+letter-spacing: 3px;
+text-transform: uppercase;
+margin-top: 14px;
+font-weight: 600;
 }
 .brand-stats {
 display: flex;
 justify-content: center;
-gap: 32px;
-margin-top: 18px;
-padding-top: 18px;
-border-top: 1px solid rgba(255,255,255,0.15);
+gap: 36px;
+margin-top: 22px;
+padding-top: 22px;
+border-top: 1px solid var(–border);
 flex-wrap: wrap;
 position: relative;
 z-index: 1;
 }
 .brand-stat-num {
-font-family: ‘Bebas Neue’, sans-serif;
-color: var(–white);
-font-size: 1.8rem;
+font-family: ‘Oswald’, sans-serif;
+color: var(–accent);
+font-size: 2rem;
 line-height: 1;
 letter-spacing: 1px;
+font-weight: 700;
 }
 .brand-stat-lbl {
-color: rgba(255,255,255,0.55);
+color: var(–muted);
 font-size: 0.6rem;
 letter-spacing: 2px;
 text-transform: uppercase;
-margin-top: 5px;
-font-weight: 500;
+margin-top: 6px;
+font-weight: 600;
 }
 
-/* ============ TITLE ============ */
 .page-title {
 text-align: center;
 padding: 22px 0 24px;
 margin-bottom: 22px;
-border-bottom: 1px solid var(–light-gray);
+border-bottom: 1px solid var(–border);
 }
 .page-title h1 {
-font-family: ‘Bebas Neue’, sans-serif;
-font-size: clamp(2rem, 7vw, 3.2rem);
+font-family: ‘Oswald’, sans-serif;
+font-size: clamp(2rem, 7vw, 3.4rem);
 letter-spacing: 5px;
-color: var(–black);
+color: var(–text);
 line-height: 1;
+font-weight: 700;
+text-transform: uppercase;
 }
 .page-title p {
-color: var(–gray);
+color: var(–muted);
 font-size: 0.72rem;
 letter-spacing: 3px;
 text-transform: uppercase;
-margin-top: 10px;
-font-weight: 600;
+margin-top: 12px;
+font-weight: 700;
 }
 
-/* ============ TABS ============ */
 .tabs {
 display: flex;
 gap: 6px;
@@ -140,34 +149,34 @@ scrollbar-width: none;
 .tabs::-webkit-scrollbar { display: none; }
 .tab {
 background: var(–surface);
-border: 1px solid var(–light-gray);
-color: var(–dark-gray);
+border: 1px solid var(–border);
+color: var(–text2);
 padding: 11px 20px;
 font-family: ‘Inter’, sans-serif;
 font-size: 0.82rem;
-font-weight: 500;
+font-weight: 600;
 cursor: pointer;
 white-space: nowrap;
-transition: all 0.2s;
-border-radius: 10px;
+transition: all 0.15s;
+border-radius: 4px;
+text-transform: uppercase;
+letter-spacing: 0.5px;
 }
 .tab:hover {
-border-color: var(–black);
-color: var(–black);
+border-color: var(–accent);
+color: var(–text);
 }
 .tab.active {
-background: var(–black);
-color: var(–white);
-border-color: var(–black);
-font-weight: 600;
-box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+background: var(–accent);
+color: var(–accent-text);
+border-color: var(–accent);
+font-weight: 700;
 }
 
-/* ============ SECTIONS ============ */
-.section { display: none; animation: fadeIn 0.3s ease; }
+.section { display: none; animation: fadeIn 0.25s ease; }
 .section.active { display: block; }
 @keyframes fadeIn {
-from { opacity: 0; transform: translateY(8px); }
+from { opacity: 0; transform: translateY(6px); }
 to { opacity: 1; transform: translateY(0); }
 }
 
@@ -176,17 +185,16 @@ to { opacity: 1; transform: translateY(0); }
 
 .card {
 background: var(–surface);
-border: 1px solid var(–light-gray);
-padding: 22px;
-border-radius: 14px;
-box-shadow: 0 1px 3px rgba(0,0,0,0.04), 0 4px 12px rgba(0,0,0,0.04);
+border: 1px solid var(–border);
+padding: 24px;
+border-radius: 4px;
 }
 .card-label {
 font-size: 0.65rem;
-letter-spacing: 2px;
+letter-spacing: 2.5px;
 text-transform: uppercase;
-color: var(–black);
-margin-bottom: 18px;
+color: var(–text);
+margin-bottom: 20px;
 font-weight: 700;
 display: flex;
 align-items: center;
@@ -196,152 +204,153 @@ gap: 10px;
 content: ‘’;
 width: 4px;
 height: 16px;
-background: var(–black);
-border-radius: 2px;
+background: var(–accent);
 }
 
-/* ============ FIELDS ============ */
 .field { margin-bottom: 16px; }
 .field label {
 display: block;
-font-size: 0.7rem;
-color: var(–dark-gray);
-letter-spacing: 0.5px;
-margin-bottom: 6px;
+font-size: 0.68rem;
+color: var(–muted);
+letter-spacing: 1px;
+margin-bottom: 8px;
 text-transform: uppercase;
-font-weight: 600;
+font-weight: 700;
 }
 .field input, .field select {
 width: 100%;
-background: var(–surface2);
-border: 1px solid var(–light-gray);
-color: var(–black);
+background: var(–bg);
+border: 1px solid var(–border);
+color: var(–text);
 font-family: ‘JetBrains Mono’, monospace;
 font-size: 0.95rem;
-padding: 12px 14px;
+padding: 13px 16px;
 outline: none;
-border-radius: 8px;
-transition: all 0.2s;
+border-radius: 4px;
+transition: all 0.15s;
+font-weight: 500;
 }
 .field input:focus, .field select:focus {
-border-color: var(–black);
-box-shadow: 0 0 0 3px rgba(0,0,0,0.08);
-background: var(–white);
+border-color: var(–accent);
+box-shadow: 0 0 0 2px rgba(255,107,0,0.15);
 }
 .field select { cursor: pointer; }
+.field select option { background: var(–surface); color: var(–text); }
 .row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
 
-/* ============ BUTTONS ============ */
 .btn {
 width: 100%;
-background: var(–black);
-color: var(–white);
+background: var(–accent);
+color: var(–accent-text);
 border: none;
-font-family: ‘Bebas Neue’, sans-serif;
-font-size: 1.3rem;
-letter-spacing: 3px;
-padding: 15px;
+font-family: ‘Oswald’, sans-serif;
+font-size: 1.4rem;
+letter-spacing: 4px;
+padding: 16px;
 cursor: pointer;
-margin-top: 18px;
-border-radius: 10px;
+margin-top: 20px;
+border-radius: 4px;
 transition: all 0.15s;
-box-shadow: 0 4px 14px rgba(0,0,0,0.2);
+font-weight: 700;
+text-transform: uppercase;
 }
 .btn:hover {
+background: var(–accent-hover);
 transform: translateY(-1px);
-background: var(–darker);
-box-shadow: 0 6px 18px rgba(0,0,0,0.3);
+box-shadow: 0 6px 20px rgba(255,107,0,0.25);
 }
 .btn:active { transform: translateY(0); }
 
-/* ============ RESULTS - DARK BLOCK ============ */
 .results {
-background: var(–pure-black);
-border: 1px solid var(–black);
-padding: 20px;
-margin-top: 16px;
-border-radius: 10px;
+background: var(–result-bg);
+border: 1px solid var(–border);
+padding: 22px;
+margin-top: 18px;
+border-radius: 4px;
 }
 .results-title {
-font-family: ‘Bebas Neue’, sans-serif;
-font-size: 1.4rem;
-letter-spacing: 3px;
-color: var(–white);
-margin-bottom: 14px;
-padding-bottom: 12px;
-border-bottom: 1px solid var(–dark-gray);
+font-family: ‘Oswald’, sans-serif;
+font-size: 1.5rem;
+letter-spacing: 4px;
+color: var(–text);
+margin-bottom: 18px;
+padding-bottom: 14px;
+border-bottom: 1px solid var(–border);
+font-weight: 700;
+text-transform: uppercase;
 }
 .result-item {
 display: flex;
 justify-content: space-between;
 align-items: center;
-padding: 10px 0;
-border-bottom: 1px solid var(–darker);
-font-size: 0.85rem;
-gap: 10px;
+padding: 11px 0;
+border-bottom: 1px solid #1a1a1a;
+font-size: 0.88rem;
+gap: 12px;
 }
 .result-item:last-child { border-bottom: none; }
-.result-name { color: var(–gray); flex: 1; }
+.result-name { color: var(–text2); flex: 1; font-weight: 400; }
 .result-value {
 font-family: ‘JetBrains Mono’, monospace;
 font-weight: 700;
 color: var(–green);
 text-align: right;
 white-space: nowrap;
+font-size: 0.95rem;
 }
 .result-value span {
 font-size: 0.7rem;
-color: var(–gray);
-margin-left: 4px;
+color: var(–muted);
+margin-left: 5px;
 font-weight: 500;
 }
 .result-group {
-margin-bottom: 14px;
-padding-bottom: 14px;
-border-bottom: 1px solid var(–darker);
+margin-bottom: 16px;
+padding-bottom: 16px;
+border-bottom: 1px solid var(–border);
 }
 .result-group:last-child { border-bottom: none; padding-bottom: 0; margin-bottom: 0; }
 .result-group-title {
-font-size: 0.65rem;
-letter-spacing: 2px;
+font-size: 0.62rem;
+letter-spacing: 2.5px;
 text-transform: uppercase;
-color: var(–gray);
+color: var(–accent);
 margin-bottom: 10px;
 font-weight: 700;
 }
 
-/* ============ CTA ============ */
 .cta-block {
-margin-top: 18px;
-padding: 26px 22px;
-background: var(–black);
+margin-top: 20px;
+padding: 28px 24px;
+background: var(–bg);
+border: 1px solid var(–border-bright);
 text-align: center;
-border-radius: 14px;
+border-radius: 4px;
 position: relative;
 overflow: hidden;
-box-shadow: 0 8px 24px rgba(0,0,0,0.2);
 }
 .cta-block::before {
 content: ‘’;
 position: absolute;
 top: 0; left: 0; right: 0;
-height: 2px;
-background: linear-gradient(90deg, transparent, var(–white), transparent);
-opacity: 0.3;
+height: 4px;
+background: var(–accent);
 }
 .cta-title {
-font-family: ‘Bebas Neue’, sans-serif;
+font-family: ‘Oswald’, sans-serif;
 font-size: 1.7rem;
 letter-spacing: 3px;
-color: var(–white);
+color: var(–text);
 line-height: 1.2;
-margin-bottom: 10px;
+margin-bottom: 12px;
+font-weight: 700;
+text-transform: uppercase;
 }
 .cta-subtitle {
-color: rgba(255,255,255,0.7);
+color: var(–text2);
 font-size: 0.78rem;
 letter-spacing: 0.3px;
-margin-bottom: 18px;
+margin-bottom: 20px;
 line-height: 1.6;
 max-width: 360px;
 margin-left: auto;
@@ -350,12 +359,12 @@ margin-right: auto;
 .cta-features {
 display: flex;
 justify-content: center;
-gap: 18px;
-margin-bottom: 20px;
+gap: 20px;
+margin-bottom: 22px;
 flex-wrap: wrap;
 }
 .cta-feature {
-color: var(–white);
+color: var(–text);
 font-size: 0.72rem;
 letter-spacing: 0.3px;
 display: flex;
@@ -365,113 +374,113 @@ font-weight: 500;
 }
 .cta-feature::before {
 content: ‘✓’;
-color: var(–white);
+color: var(–accent);
 font-weight: 700;
-font-size: 0.9rem;
+font-size: 1rem;
 }
 .cta-btn {
 display: inline-block;
-background: var(–white);
-color: var(–black);
+background: var(–accent);
+color: var(–accent-text);
 text-decoration: none;
-padding: 15px 40px;
-font-family: ‘Bebas Neue’, sans-serif;
-font-size: 1.25rem;
-letter-spacing: 3px;
+padding: 16px 44px;
+font-family: ‘Oswald’, sans-serif;
+font-size: 1.3rem;
+letter-spacing: 4px;
 border: none;
 cursor: pointer;
-border-radius: 10px;
+border-radius: 4px;
 transition: all 0.2s;
-box-shadow: 0 6px 18px rgba(0,0,0,0.3);
 font-weight: 700;
+text-transform: uppercase;
 }
 .cta-btn:hover {
+background: var(–accent-hover);
 transform: translateY(-2px);
-box-shadow: 0 8px 22px rgba(0,0,0,0.4);
+box-shadow: 0 8px 24px rgba(255,107,0,0.35);
 }
 .cta-link {
 display: block;
-margin-top: 14px;
-color: rgba(255,255,255,0.5);
+margin-top: 16px;
+color: var(–muted);
 font-size: 0.7rem;
 letter-spacing: 2px;
 text-decoration: none;
 text-transform: uppercase;
 font-weight: 500;
 }
-.cta-link:hover { color: var(–white); }
+.cta-link:hover { color: var(–accent); }
 
-/* ============ MISC ============ */
-.hint { font-size: 0.66rem; color: var(–gray); margin-top: 5px; line-height: 1.5; }
+.hint { font-size: 0.65rem; color: var(–muted); margin-top: 6px; line-height: 1.5; }
 .tag {
 display: inline-block;
 font-size: 0.6rem;
-padding: 2px 7px;
+padding: 3px 8px;
 letter-spacing: 0.5px;
 margin-left: 6px;
-border-radius: 4px;
-font-weight: 600;
+border-radius: 3px;
+font-weight: 700;
+text-transform: uppercase;
 }
-.tag.plus { background: rgba(74,222,128,0.15); color: var(–green); }
+.tag.plus { background: rgba(0,255,136,0.15); color: var(–green); }
 
 .section-desc {
 font-size: 0.78rem;
-color: var(–dark-gray);
-margin-bottom: 20px;
+color: var(–text2);
+margin-bottom: 22px;
 line-height: 1.6;
-padding: 14px 16px;
-border-left: 3px solid var(–black);
+padding: 14px 18px;
+border-left: 4px solid var(–accent);
 background: var(–surface);
-border-radius: 0 10px 10px 0;
+border-radius: 0 4px 4px 0;
 }
-.divider { border: none; border-top: 1px solid var(–light-gray); margin: 18px 0; }
+.divider { border: none; border-top: 1px solid var(–border); margin: 18px 0; }
 
 .checkbox-row {
 display: flex;
 align-items: center;
-gap: 10px;
+gap: 12px;
 margin-bottom: 12px;
 padding: 8px 0;
 }
 .checkbox-row input[type=“checkbox”] {
 width: 18px;
 height: 18px;
-accent-color: var(–black);
+accent-color: var(–accent);
 cursor: pointer;
 }
 .checkbox-row label {
 font-size: 0.78rem;
-color: var(–black);
+color: var(–text);
 cursor: pointer;
 font-weight: 500;
 }
 
-/* ============ FOOTER ============ */
 .footer-brand {
 text-align: center;
-margin-top: 36px;
-padding: 24px 16px;
-border-top: 1px solid var(–light-gray);
-color: var(–gray);
+margin-top: 40px;
+padding: 28px 16px;
+border-top: 1px solid var(–border);
+color: var(–muted);
 font-size: 0.72rem;
 letter-spacing: 2px;
 text-transform: uppercase;
-font-weight: 500;
+font-weight: 600;
 }
 .footer-brand a { color: inherit; text-decoration: none; transition: color 0.2s; }
-.footer-brand a:hover { color: var(–black); }
+.footer-brand a:hover { color: var(–accent); }
 .footer-brand span.brand-name {
-color: var(–black);
-font-family: ‘Bebas Neue’, sans-serif;
+color: var(–accent);
+font-family: ‘Oswald’, sans-serif;
 font-size: 1.1rem;
 letter-spacing: 3px;
 font-weight: 700;
 }
 .footer-brand .footer-site {
 display: block;
-color: var(–gray);
+color: var(–muted);
 font-size: 0.65rem;
-margin-top: 6px;
+margin-top: 8px;
 font-weight: 400;
 letter-spacing: 1.5px;
 }
@@ -549,7 +558,7 @@ letter-spacing: 1.5px;
         </select>
       </div>
       <div class="checkbox-row"><input type="checkbox" id="o-reserve" onchange="calcObsh()"><label for="o-reserve">Запас 10% на подрезку</label></div>
-      <button class="btn" onclick="calcObsh()">РАССЧИТАТЬ</button>
+      <button class="btn" onclick="calcObsh()">Рассчитать</button>
     </div>
     <div class="card"><div class="card-label">Результат расчёта</div><div class="results" id="obsh-results"></div></div>
   </div>
@@ -580,7 +589,7 @@ letter-spacing: 1.5px;
       </div>
       <div class="field"><label>Дверные проёмы, шт</label><input type="number" id="p-doors" value="0" min="0" oninput="calcPereg()"></div>
       <div class="checkbox-row"><input type="checkbox" id="p-reserve" onchange="calcPereg()"><label for="p-reserve">Запас 10%</label></div>
-      <button class="btn" onclick="calcPereg()">РАССЧИТАТЬ</button>
+      <button class="btn" onclick="calcPereg()">Рассчитать</button>
     </div>
     <div class="card"><div class="card-label">Результат расчёта</div><div class="results" id="pereg-results"></div></div>
   </div>
@@ -646,7 +655,7 @@ letter-spacing: 1.5px;
       </div>
       <div class="checkbox-row"><input type="checkbox" id="kl-mesh" onchange="calcKladka()"><label for="kl-mesh">Армирующая сетка</label></div>
       <div class="checkbox-row"><input type="checkbox" id="kl-reserve" checked onchange="calcKladka()"><label for="kl-reserve">Запас 5% на бой</label></div>
-      <button class="btn" onclick="calcKladka()">РАССЧИТАТЬ</button>
+      <button class="btn" onclick="calcKladka()">Рассчитать</button>
     </div>
     <div class="card"><div class="card-label">Результат расчёта</div><div class="results" id="kladka-results"></div></div>
   </div>
@@ -675,7 +684,7 @@ letter-spacing: 1.5px;
       <div class="checkbox-row"><input type="checkbox" id="st-mayak" checked onchange="calcShtuk()"><label for="st-mayak">Маяки штукатурные</label></div>
       <div class="checkbox-row"><input type="checkbox" id="st-grunt" checked onchange="calcShtuk()"><label for="st-grunt">Грунтовка</label></div>
       <div class="checkbox-row"><input type="checkbox" id="st-reserve" onchange="calcShtuk()"><label for="st-reserve">Запас 10%</label></div>
-      <button class="btn" onclick="calcShtuk()">РАССЧИТАТЬ</button>
+      <button class="btn" onclick="calcShtuk()">Рассчитать</button>
     </div>
     <div class="card"><div class="card-label">Результат расчёта</div><div class="results" id="shtuk-results"></div></div>
   </div>
@@ -711,7 +720,7 @@ letter-spacing: 1.5px;
         </select>
       </div>
       <div class="checkbox-row"><input type="checkbox" id="sh-reserve" onchange="calcShp()"><label for="sh-reserve">Запас 10%</label></div>
-      <button class="btn" onclick="calcShp()">РАССЧИТАТЬ</button>
+      <button class="btn" onclick="calcShp()">Рассчитать</button>
     </div>
     <div class="card"><div class="card-label">Результат расчёта</div><div class="results" id="shp-results"></div></div>
   </div>
@@ -751,7 +760,7 @@ letter-spacing: 1.5px;
         </select>
       </div>
       <div class="checkbox-row"><input type="checkbox" id="k-reserve" onchange="calcKraska()"><label for="k-reserve">Запас 10%</label></div>
-      <button class="btn" onclick="calcKraska()">РАССЧИТАТЬ</button>
+      <button class="btn" onclick="calcKraska()">Рассчитать</button>
     </div>
     <div class="card"><div class="card-label">Результат расчёта</div><div class="results" id="kraska-results"></div></div>
   </div>
@@ -811,7 +820,7 @@ letter-spacing: 1.5px;
           <option value="1">1 кг</option><option value="2" selected>2 кг</option><option value="5">5 кг</option>
         </select>
       </div>
-      <button class="btn" onclick="calcTile()">РАССЧИТАТЬ</button>
+      <button class="btn" onclick="calcTile()">Рассчитать</button>
     </div>
     <div class="card"><div class="card-label">Результат расчёта</div><div class="results" id="tile-results"></div></div>
   </div>
@@ -842,7 +851,7 @@ letter-spacing: 1.5px;
         </select>
       </div>
       <div class="checkbox-row"><input type="checkbox" id="a-reserve" checked onchange="calcArm()"><label for="a-reserve">Запас 5%</label></div>
-      <button class="btn" onclick="calcArm()">РАССЧИТАТЬ</button>
+      <button class="btn" onclick="calcArm()">Рассчитать</button>
     </div>
     <div class="card"><div class="card-label">Результат расчёта</div><div class="results" id="arm-results"></div></div>
   </div>
@@ -874,7 +883,7 @@ function cta(){
       '<div class="cta-feature">Гарантия 3 года</div>'+
       '<div class="cta-feature">Договор</div>'+
     '</div>'+
-    '<a href="https://migremont.pro" target="_blank" class="cta-btn">ПЕРЕЙТИ НА САЙТ</a>'+
+    '<a href="https://migremont.pro" target="_blank" class="cta-btn">Перейти на сайт</a>'+
     '<a href="https://migremont.pro" target="_blank" class="cta-link">migremont.pro</a>'+
     '</div>'
 }
